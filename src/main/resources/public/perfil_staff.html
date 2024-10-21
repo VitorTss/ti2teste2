@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: row;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            width: 200px;
+            background-color: blue;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            color: white;
+        }
+
+        .navbar .logo {
+            margin-bottom: 20px;
+            width: 75%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .navbar .logo img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .navbar ul li {
+            width: 100%;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px 0;
+        }
+
+        .navbar ul li a:hover {
+            background-color: #0056b3;
+        }
+
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        .foto-container {
+            border: 5px solid #ddd;
+            border-radius: 50%;
+            width: 160px;
+            height: 160px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .foto-container img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .nome-usuario,
+        .senha-usuario {
+            font-size: 24px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .senha-usuario {
+            font-size: 18px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .change-photo-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #0751ff;
+            color: white;
+        }
+
+        /* Estilo para os campos de entrada */
+        .input-field {
+            font-size: 24px;
+            text-align: center;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            margin: 10px 0;
+            padding: 5px;
+            width: 250px;
+        }
+
+        /* Adicionando estilo para o campo desativado */
+        .input-field[disabled] {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .save-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+        }
+
+        .delete-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color:#ff3333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <img src="/img/logo_redonda.png" alt="Logo do Site">
+        </div>
+        <ul>
+            <li><a href="conteudo_staff.html">Meu Conteúdo</a></li> 
+            <li><a href="app_createtopic.html">Adicionar Conteúdo</a></li> 
+            <li><a href="forum_staff.html">Fórum</a></li> 
+            <li><a href="perfil_staff.html">Meu Perfil</a></li>
+            <li><a href="index.html">Sair</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1>Meu Perfil</h1>
+        <div class="foto-container">
+            <img id="foto-usuario" src="img/placeholder.png" alt="Foto do Usuário">
+        </div>
+
+        <label for="nome_usuario"><b>Nome de Usuário</b></label>
+        <input type="text" placeholder="Insira seu nome de usuário" id="nome_usuario">
+
+        <label for="senha"><b>Senha</b></label>
+        <input type="password" placeholder="Insira sua senha" id="senha">
+
+        <button class="save-button" id="save-button">Salvar</button>
+        <button class="delete-button" id="delete-button">Deletar Perfil</button>
+
+    </div>
+
+    <script>
+        // Função para buscar dados do usuário pelo nome_usuario
+        const fetchUserData = async (nomeUsuario) => {
+            try {
+                const response = await fetch('http://localhost:4567/usuarios');
+                if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
+
+                const data = await response.json();
+                const usuario = data.find(user => user.nome_usuario === nomeUsuario);
+
+                if (usuario) {
+                    document.getElementById('nome_usuario').value = usuario.nome;
+                    document.getElementById('senha').value = usuario.senha;
+
+                    const fotoSalva = localStorage.getItem('foto-usuario');
+                    document.getElementById('foto-usuario').src = fotoSalva || "img/placeholder.png";
+
+                    // Salvando o id no localStorage para a função de deletar
+                    localStorage.setItem('usuario_id', usuario.id);
+                } else {
+                    console.error('Usuário não encontrado');
+                }
+            } catch (error) {
+                console.error('Erro ao buscar dados do usuário:', error);
+            }
+        };
+
+        // Função para atualizar dados do usuário usando nome_usuario
+        const updateUser = async (nomeUsuario, nome, senha) => {
+            try {
+                const response = await fetch(`http://localhost:4567/usuarios/${nomeUsuario}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nome, senha }) // Enviando nome e senha
+                });
+
+                if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
+
+                alert('Dados atualizados com sucesso!');
+            } catch (error) {
+                console.error('Erro ao atualizar dados do usuário:', error);
+            }
+        };
+
+        // Função para deletar o usuário pelo id
+        const deleteUser = async (id) => {
+            try {
+                const response = await fetch(`http://localhost:4567/usuarios/${id}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
+                
+                alert('Usuário deletado com sucesso!');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Erro ao deletar o usuário:', error);
+            }
+        };
+
+        // Ao carregar a página
+        window.addEventListener('load', () => {
+            const nomeUsuario = localStorage.getItem('nome_usuario');
+            if (nomeUsuario) {
+                fetchUserData(nomeUsuario); // Buscar dados do usuário pelo nome_usuario
+            } else {
+                console.error('nome_usuario não encontrado no localStorage');
+            }
+
+            document.getElementById('save-button').addEventListener('click', () => {
+                const nome = document.getElementById('nome_usuario').value;
+                const senha = document.getElementById('senha').value;
+                const nomeUsuario = localStorage.getItem('nome_usuario'); // Usando nome_usuario no update
+
+                if (nomeUsuario) {
+                    updateUser(nomeUsuario, nome, senha); // Usando nome_usuario no update
+                } else {
+                    console.error('Nome do usuário não encontrado.');
+                }
+            });
+
+            document.getElementById('delete-button').addEventListener('click', () => {
+                const id = localStorage.getItem('usuario_id'); // Obtendo o id do localStorage
+                if (id) {
+                    deleteUser(id); // Chama a função para deletar o usuário pelo id
+                } else {
+                    console.error('ID do usuário não encontrado.');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

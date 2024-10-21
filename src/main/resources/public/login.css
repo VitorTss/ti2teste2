@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.logo {
+    margin-bottom: 20px;
+}
+
+.logo img {
+    width: 120px; /* Ajusta o tamanho da logo */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+    border-color: #4698cb;
+    outline: none;
+}
+
+button {
+    background-color: #4698cb;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #357ca5;
+}
+
+button:active {
+    background-color: #2c6380;
+    box-shadow: none;
+}
+
+/* Nova classe para o botão "Criar Usuário" */
+.button-criar-usuario {
+    margin-top: 10px; /* Altere o valor conforme necessário */
+}

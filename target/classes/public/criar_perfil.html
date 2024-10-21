@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Usuário</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Centraliza os itens */
+        }
+
+        label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+            display: block;
+            text-align: left;
+            /* Alinha o texto à esquerda */
+            width: 100%;
+            /* Faz o label ocupar a largura total */
+        }
+
+        input[type=text],
+        input[type=password] {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input[type=text]:focus,
+        input[type=password]:focus {
+            border-color: #4698cb;
+            outline: none;
+        }
+
+        button {
+            background-color: #4698cb;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #357ca5;
+        }
+
+        button:active {
+            background-color: #2c6380;
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Cadastro de Usuário</h1>
+        <form id="userForm">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <label for="nome_usuario">Nome de Usuário:</label>
+            <input type="text" id="nome_usuario" name="nome_usuario" required>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('userForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita o envio padrão do formulário
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            // Criar os parâmetros no formato de query
+            const queryParams = new URLSearchParams();
+            queryParams.append('nome', formData.get('nome')); // Nome do usuário
+            queryParams.append('senha', formData.get('senha')); // Senha do usuário
+            queryParams.append('nome_usuario', formData.get('nome_usuario')); // Nome de usuário
+
+            // Fazer o POST request com os parâmetros no formato 'application/x-www-form-urlencoded'
+            fetch('http://localhost:4567/usuarios', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: queryParams.toString(), // Converte os parâmetros em uma string formatada
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao cadastrar novo usuário: ' + response.statusText);
+                    }
+                    return response.json(); // Processa a resposta como JSON
+                })
+                .then(data => {
+                    console.log('Novo usuário cadastrado:', data);
+                    alert(data); // Exibe uma mensagem de sucesso
+                    form.reset(); // Limpa o formulário após o envio bem-sucedido
+                })
+                .catch(error => {
+                    console.error('Erro ao cadastrar novo usuário:', error);
+                    alert('Falha ao criar o usuário. Tente novamente.'); // Mostra um alerta em caso de erro
+                });
+        });
+    </script>
+
+
+</body>
+
+</html>
